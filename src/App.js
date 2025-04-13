@@ -16,14 +16,18 @@ function App() {
 
   const addMedicine = (diseaseIndex) => {
     const updated = [...diseases];
-    updated[diseaseIndex].medicines.push({ name: '', dosage: '' });
+    updated[diseaseIndex].medicines.push({ name: '' });
     setDiseases(updated);
   };
 
-  const updateMedicineField = (diseaseIndex, medIndex, field, value) => {
+  const updateMedicineName = (diseaseIndex, medIndex, value) => {
     const updated = [...diseases];
-    updated[diseaseIndex].medicines[medIndex][field] = value;
+    updated[diseaseIndex].medicines[medIndex].name = value;
     setDiseases(updated);
+  };
+
+  const resetForm = () => {
+    setDiseases([]);
   };
 
   const handleSubmit = async (e) => {
@@ -41,7 +45,11 @@ function App() {
 
       if (response.ok) {
         setStatusMessage('✅ Data submitted successfully!');
-        setDiseases([]); // Optionally reset the form
+        resetForm();
+
+        setTimeout(() => {
+          setStatusMessage('');
+        }, 3000);
       } else {
         setStatusMessage('❌ Submission failed. Please try again.');
       }
@@ -74,30 +82,17 @@ function App() {
             </div>
 
             {disease.medicines.map((med, mIndex) => (
-              <div key={mIndex} className="row mb-3">
-                <div className="col-md-6">
-                  <label className="form-label">Medicine Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={med.name}
-                    onChange={(e) =>
-                      updateMedicineField(dIndex, mIndex, 'name', e.target.value)
-                    }
-                    required
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="form-label">Dosage</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={med.dosage}
-                    onChange={(e) =>
-                      updateMedicineField(dIndex, mIndex, 'dosage', e.target.value)
-                    }
-                  />
-                </div>
+              <div key={mIndex} className="mb-3">
+                <label className="form-label">Medicine Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={med.name}
+                  onChange={(e) =>
+                    updateMedicineName(dIndex, mIndex, e.target.value)
+                  }
+                  required
+                />
               </div>
             ))}
 
